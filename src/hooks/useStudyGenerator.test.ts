@@ -49,4 +49,17 @@ describe('useStudyGenerator', () => {
     })
     expect(result.current.error).toBe('API error')
   })
+
+  it('sends the chosen model in the request body', async () => {
+    mockFetch.mockResolvedValue({ ok: true, json: async () => mockStudySet })
+    const { result } = renderHook(() => useStudyGenerator())
+    await act(async () => {
+      await result.current.generate(
+        'some text longer than 50 chars here yes this is long enough',
+        'llama-3.3-70b-versatile',
+      )
+    })
+    const body = JSON.parse(mockFetch.mock.calls[0][1].body)
+    expect(body.model).toBe('llama-3.3-70b-versatile')
+  })
 })
