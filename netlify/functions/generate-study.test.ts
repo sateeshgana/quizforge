@@ -1,4 +1,5 @@
-import { buildStudyPrompt, parseStudyResponse } from './generate-study.mts'
+import { buildStudyPrompt, parseStudyResponse, resolveModel } from './generate-study.mts'
+import { DEFAULT_MODEL } from '../../src/models.ts'
 
 describe('buildStudyPrompt', () => {
   it('includes the source text in the prompt', () => {
@@ -34,5 +35,19 @@ describe('parseStudyResponse', () => {
 
   it('throws on invalid JSON', () => {
     expect(() => parseStudyResponse('not json')).toThrow()
+  })
+})
+
+describe('resolveModel', () => {
+  it('returns a valid model id unchanged', () => {
+    expect(resolveModel('llama-3.3-70b-versatile')).toBe('llama-3.3-70b-versatile')
+  })
+
+  it('falls back to DEFAULT_MODEL when model is undefined', () => {
+    expect(resolveModel(undefined)).toBe(DEFAULT_MODEL)
+  })
+
+  it('falls back to DEFAULT_MODEL when model id is not in MODELS list', () => {
+    expect(resolveModel('gpt-4-turbo')).toBe(DEFAULT_MODEL)
   })
 })

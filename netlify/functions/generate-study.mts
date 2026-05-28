@@ -1,6 +1,7 @@
 import Groq from 'groq-sdk'
 import { randomUUID } from 'crypto'
 import type { StudySet } from '../../src/types'
+import { MODELS, DEFAULT_MODEL } from '../../src/models'
 
 export function buildStudyPrompt(text: string): string {
   return `You are a study assistant. Given the following text, generate study materials in JSON format.
@@ -34,12 +35,15 @@ Requirements:
 `
 }
 
+export function resolveModel(model?: string): string {
+  const validIds = new Set(MODELS.map((m) => m.id))
+  return model && validIds.has(model) ? model : DEFAULT_MODEL
+}
+
 export function parseStudyResponse(raw: string): StudySet {
-  // Strip markdown code fences if present
   const json = raw.replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim()
   const parsed = JSON.parse(json)
 
-  // Normalise: add stable IDs
   return {
     flashcards: parsed.flashcards.map((f: { front: string; back: string }) => ({
       id: randomUUID(),
@@ -66,11 +70,11 @@ export default async (req: Request) => {
   if (req.method !== 'POST')
     return new Response('Method Not Allowed', { status: 405 })
 
-  let body: { text?: string }
+  let body: { text?: string; model?: string }
   try { body = await req.json() }
   catch { return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { 'Content-Type': 'application/json' } }) }
 
-  const { text } = body
+  const { text, model } = body
   if (!text || text.trim().length < 50)
     return new Response(JSON.stringify({ error: 'text must be at least 50 characters' }), {
       status: 400, headers: { 'Content-Type': 'application/json' },
@@ -79,7 +83,7 @@ export default async (req: Request) => {
   try {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
     const completion = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
+      model: resolveModel(model),
       messages: [{ role: 'user', content: buildStudyPrompt(text) }],
       max_tokens: 4096,
       response_format: { type: 'json_object' },
