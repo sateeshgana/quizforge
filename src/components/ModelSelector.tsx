@@ -17,7 +17,7 @@ export function ModelSelector({ selected, onChange }: Props) {
               key={m.id}
               type="button"
               role="radio"
-              aria-checked={isSelected}
+              aria-checked={isSelected ? 'true' : 'false'}
               onClick={() => onChange(m.id)}
               className={`flex flex-col gap-1 rounded-lg border p-3 text-left transition-colors ${
                 isSelected
