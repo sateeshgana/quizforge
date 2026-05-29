@@ -16,7 +16,7 @@ export function ExportButton({ flashcards }: Props) {
 
   return (
     <button type="button" onClick={download}
-      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-gray-300 hover:text-white text-sm transition-colors">
+      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-gray-800 hover:border-gray-300 text-sm transition-colors shadow-sm">
       <Download size={14} />Export to Anki CSV
     </button>
   )

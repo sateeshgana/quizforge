@@ -15,7 +15,7 @@ export default function App() {
   const [text,          setText]          = useState('')
   const [tab,           setTab]           = useState<Tab>('flashcards')
   const [selectedModel, setSelectedModel] = useState(DEFAULT_MODEL)
-  const { studySet, isLoading, error, generate } = useStudyGenerator()
+  const { studySet, isLoading, error, generate, reset } = useStudyGenerator()
   const { progress, record }                      = useCardProgress()
 
   const TABS: { id: Tab; label: string }[] = [
@@ -25,11 +25,11 @@ export default function App() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
-      <header className="border-b border-gray-800 px-6 py-4 flex items-center gap-3">
-        <BookOpen size={22} className="text-indigo-400" />
-        <span className="font-bold text-lg">QuizForge</span>
-        <span className="text-xs text-gray-500">AI-powered study sets</span>
+    <div className="min-h-screen bg-gray-50 text-gray-800">
+      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-3 shadow-sm">
+        <BookOpen size={22} className="text-sky-500" />
+        <span className="font-bold text-lg text-gray-800">QuizForge</span>
+        <span className="text-xs text-gray-400">AI-powered study sets</span>
       </header>
 
       <main className="max-w-3xl mx-auto p-6 flex flex-col gap-8">
@@ -45,19 +45,19 @@ export default function App() {
         ) : (
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
-              <div className="flex gap-1 bg-gray-800 rounded-lg p-1">
+              <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
                 {TABS.map((t) => (
                   <button key={t.id} type="button" onClick={() => setTab(t.id)}
-                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === t.id ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-gray-200'}`}>
+                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === t.id ? 'bg-sky-500 text-white' : 'text-gray-500 hover:text-gray-700'}`}>
                     {t.label}
                   </button>
                 ))}
               </div>
               <div className="flex gap-2">
                 <ExportButton flashcards={studySet.flashcards} />
-                <button type="button" onClick={() => generate(text, selectedModel)}
-                  className="px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 text-gray-400 hover:text-gray-200 text-xs">
-                  Regenerate
+                <button type="button" onClick={reset}
+                  className="px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gray-700 hover:border-gray-300 text-xs transition-colors">
+                  ← New Study Set
                 </button>
               </div>
             </div>
@@ -69,7 +69,7 @@ export default function App() {
         )}
 
         {error && (
-          <div className="rounded-lg bg-red-900/20 border border-red-700 p-4 text-red-300 text-sm">{error}</div>
+          <div className="rounded-lg bg-red-50 border border-red-300 p-4 text-red-600 text-sm">{error}</div>
         )}
       </main>
     </div>

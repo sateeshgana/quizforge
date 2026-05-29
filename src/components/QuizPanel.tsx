@@ -32,10 +32,10 @@ export function QuizPanel({ questions }: Props) {
 
   if (done) return (
     <div className="text-center py-12">
-      <p className="text-4xl font-bold text-indigo-400">{score} / {questions.length}</p>
-      <p className="mt-2 text-gray-400">Quiz complete!</p>
+      <p className="text-4xl font-bold text-sky-500">{score} / {questions.length}</p>
+      <p className="mt-2 text-gray-500">Quiz complete!</p>
       <button type="button" onClick={() => { setIndex(0); setSelected(null); setScore(0); setDone(false) }}
-        className="mt-6 px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium">
+        className="mt-6 px-6 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-white text-sm font-medium shadow-sm transition-colors">
         Retake
       </button>
     </div>
@@ -43,8 +43,8 @@ export function QuizPanel({ questions }: Props) {
 
   return (
     <div className="flex flex-col gap-6 max-w-xl mx-auto">
-      <p className="text-xs text-gray-500">{index + 1} / {questions.length} · Score: {score}</p>
-      <p className="text-base font-medium text-gray-100">{q.question}</p>
+      <p className="text-xs text-gray-400">{index + 1} / {questions.length} · Score: {score}</p>
+      <p className="text-base font-medium text-gray-800">{q.question}</p>
 
       <div className="flex flex-col gap-2">
         {q.options.map((opt, i) => {
@@ -53,21 +53,21 @@ export function QuizPanel({ questions }: Props) {
           const isSelected = opt === selected
           return (
             <button key={i} type="button" onClick={() => handleSelect(opt, label)}
-              className={clsx('text-left px-4 py-3 rounded-lg border text-sm transition-colors',
-                !selected ? 'border-gray-700 bg-gray-800 hover:border-indigo-500 text-gray-200' :
-                isCorrect ? 'border-green-500 bg-green-900/30 text-green-300' :
-                isSelected ? 'border-red-500 bg-red-900/30 text-red-300' :
-                'border-gray-700 bg-gray-800 text-gray-500')}>
-              <span className="font-mono mr-2">{label}.</span>{opt}
+              className={clsx('text-left px-4 py-3 rounded-xl border-2 text-sm transition-all shadow-sm',
+                !selected ? 'border-gray-200 bg-white hover:border-sky-400 text-gray-700' :
+                isCorrect ? 'border-green-400 bg-green-50 text-green-800' :
+                isSelected ? 'border-rose-400 bg-rose-50 text-rose-800' :
+                'border-gray-200 bg-gray-50 text-gray-400')}>
+              <span className="font-mono mr-2 font-bold">{label}.</span>{opt}
             </button>
           )
         })}
       </div>
 
       {selected && (
-        <div className={clsx('flex items-start gap-2 text-sm rounded-lg p-3',
-          selected === correctText ? 'bg-green-900/20 text-green-300' : 'bg-red-900/20 text-red-300')}>
-          {selected === correctText ? <CheckCircle size={16} className="mt-0.5" /> : <XCircle size={16} className="mt-0.5" />}
+        <div className={clsx('flex items-start gap-2 text-sm rounded-xl p-4 border',
+          selected === correctText ? 'bg-green-50 text-green-700 border-green-200' : 'bg-rose-50 text-rose-700 border-rose-200')}>
+          {selected === correctText ? <CheckCircle size={16} className="mt-0.5 flex-shrink-0" /> : <XCircle size={16} className="mt-0.5 flex-shrink-0" />}
           <div>
             <p className="font-medium">{selected === correctText ? 'Correct!' : `Incorrect. Answer: ${q.answer}. ${correctText}`}</p>
             <p className="mt-1 text-xs opacity-80">{q.explanation}</p>
@@ -77,7 +77,7 @@ export function QuizPanel({ questions }: Props) {
 
       {selected && (
         <button type="button" onClick={next}
-          className="self-end px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium">
+          className="self-end px-5 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-white text-sm font-medium shadow-sm transition-colors">
           {index + 1 >= questions.length ? 'See results' : 'Next →'}
         </button>
       )}
