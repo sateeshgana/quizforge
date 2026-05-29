@@ -14,7 +14,7 @@ export const MODELS: Model[] = [
   { id: 'mistralai/mistral-7b-instruct:free',          name: 'Mistral 7B',        badge: '🆓 Fast',          context: '32k',  description: 'European AI, efficient',    provider: 'openrouter'  },
   { id: 'google/gemma-2-9b-it:free',                   name: 'Gemma 2 9B',        badge: '🆓 Google AI',     context: '8k',   description: 'Google open model',         provider: 'openrouter'  },
   { id: 'deepseek/deepseek-r1-distill-llama-70b:free', name: 'DeepSeek R1 70B',   badge: '🆓 Reasoning',     context: '32k',  description: 'Deep reasoning model',      provider: 'openrouter'  },
-  { id: 'meta-llama/llama-3.1-8b-instruct:free',       name: 'Llama 3.1 8B',      badge: '🆓 Open Source',   context: '32k',  description: 'Meta open source model',    provider: 'openrouter'  },
+  { id: 'meta-llama/llama-3.1-8b-instruct:free',       name: 'Llama 3.1 8B Instruct', badge: '🆓 Open Source',   context: '32k',  description: 'Meta open source model',    provider: 'openrouter'  },
   { id: 'microsoft/phi-3-mini-128k-instruct:free',     name: 'Phi-3 Mini',        badge: '🆓 Long Context',  context: '128k', description: 'Huge context window',       provider: 'openrouter'  },
 ]
 
