@@ -10,12 +10,12 @@ export interface Model {
 export const MODELS: Model[] = [
   { id: 'llama-3.1-8b-instant',                        name: 'Llama 3.1 8B',      badge: '⚡ Fastest',      context: '8k',   description: 'Best for quick results',    provider: 'groq'        },
   { id: 'llama-3.3-70b-versatile',                     name: 'Llama 3.3 70B',     badge: '🧠 Best Quality',  context: '128k', description: 'Most accurate study sets',  provider: 'groq'        },
-  { id: 'qwen/qwen-2.5-72b-instruct:free',             name: 'Qwen 2.5 72B',      badge: '🆓 Smart',         context: '32k',  description: 'Strong reasoning, free',    provider: 'openrouter'  },
-  { id: 'mistralai/mistral-7b-instruct:free',          name: 'Mistral 7B',        badge: '🆓 Fast',          context: '32k',  description: 'European AI, efficient',    provider: 'openrouter'  },
-  { id: 'google/gemma-2-9b-it:free',                   name: 'Gemma 2 9B',        badge: '🆓 Google AI',     context: '8k',   description: 'Google open model',         provider: 'openrouter'  },
-  { id: 'deepseek/deepseek-r1-distill-llama-70b:free', name: 'DeepSeek R1 70B',   badge: '🆓 Reasoning',     context: '32k',  description: 'Deep reasoning model',      provider: 'openrouter'  },
-  { id: 'meta-llama/llama-3.1-8b-instruct:free',       name: 'Llama 3.1 8B Instruct', badge: '🆓 Open Source',   context: '32k',  description: 'Meta open source model',    provider: 'openrouter'  },
-  { id: 'microsoft/phi-3-mini-128k-instruct:free',     name: 'Phi-3 Mini',        badge: '🆓 Long Context',  context: '128k', description: 'Huge context window',       provider: 'openrouter'  },
+  { id: 'deepseek/deepseek-v4-flash:free',              name: 'DeepSeek V4 Flash', badge: '🆓 Smart',         context: '1M',   description: 'Fast & smart, 1M context',  provider: 'openrouter'  },
+  { id: 'openai/gpt-oss-20b:free',                     name: 'GPT-OSS 20B',       badge: '🆓 Fast',          context: '131k', description: 'OpenAI open model, fast',   provider: 'openrouter'  },
+  { id: 'google/gemma-4-31b-it:free',                  name: 'Gemma 4 31B',       badge: '🆓 Google AI',     context: '262k', description: 'Google open model',         provider: 'openrouter'  },
+  { id: 'nvidia/nemotron-3-super-120b-a12b:free',      name: 'Nemotron Super 120B', badge: '🆓 Reasoning',   context: '1M',   description: 'NVIDIA powerful reasoner',  provider: 'openrouter'  },
+  { id: 'openai/gpt-oss-120b:free',                    name: 'GPT-OSS 120B',      badge: '🆓 Open Source',   context: '131k', description: 'OpenAI large open model',   provider: 'openrouter'  },
+  { id: 'moonshotai/kimi-k2.6:free',                   name: 'Kimi K2.6',         badge: '🆓 Long Context',  context: '262k', description: 'Moonshot long context AI',  provider: 'openrouter'  },
 ]
 
 export const DEFAULT_MODEL = MODELS[0].id

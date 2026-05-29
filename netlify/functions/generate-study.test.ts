@@ -60,8 +60,8 @@ describe('resolveModelConfig', () => {
   })
 
   it('returns the full Model object for a valid OpenRouter id', () => {
-    const result = resolveModelConfig('qwen/qwen-2.5-72b-instruct:free')
-    expect(result.id).toBe('qwen/qwen-2.5-72b-instruct:free')
+    const result = resolveModelConfig('deepseek/deepseek-v4-flash:free')
+    expect(result.id).toBe('deepseek/deepseek-v4-flash:free')
     expect(result.provider).toBe('openrouter')
   })
 

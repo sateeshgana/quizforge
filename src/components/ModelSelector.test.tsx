@@ -26,7 +26,7 @@ describe('ModelSelector', () => {
   it('calls onChange with the model id when a row is clicked', async () => {
     const onChange = vi.fn()
     render(<ModelSelector selected={MODELS[0].id} onChange={onChange} />)
-    await userEvent.click(screen.getByText('Qwen 2.5 72B'))
-    expect(onChange).toHaveBeenCalledWith('qwen/qwen-2.5-72b-instruct:free')
+    await userEvent.click(screen.getByText('DeepSeek V4 Flash'))
+    expect(onChange).toHaveBeenCalledWith('deepseek/deepseek-v4-flash:free')
   })
 })
