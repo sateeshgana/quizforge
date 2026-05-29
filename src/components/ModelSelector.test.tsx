@@ -5,22 +5,28 @@ import { ModelSelector } from './ModelSelector'
 import { MODELS } from '../models'
 
 describe('ModelSelector', () => {
-  it('renders all four model names', () => {
+  it('renders all eight model names', () => {
     render(<ModelSelector selected={MODELS[0].id} onChange={vi.fn()} />)
     MODELS.forEach((m) => expect(screen.getByText(m.name)).toBeInTheDocument())
   })
 
-  it('marks only the selected card as aria-checked true', () => {
+  it('renders provider group headers', () => {
+    render(<ModelSelector selected={MODELS[0].id} onChange={vi.fn()} />)
+    expect(screen.getByText('Groq')).toBeInTheDocument()
+    expect(screen.getByText(/OpenRouter/i)).toBeInTheDocument()
+  })
+
+  it('marks only the selected model as aria-checked true', () => {
     render(<ModelSelector selected={MODELS[1].id} onChange={vi.fn()} />)
     const radios = screen.getAllByRole('radio')
     expect(radios[1]).toHaveAttribute('aria-checked', 'true')
     expect(radios[0]).toHaveAttribute('aria-checked', 'false')
   })
 
-  it('calls onChange with the model id when a card is clicked', async () => {
+  it('calls onChange with the model id when a row is clicked', async () => {
     const onChange = vi.fn()
     render(<ModelSelector selected={MODELS[0].id} onChange={onChange} />)
-    await userEvent.click(screen.getByText(MODELS[1].name))
-    expect(onChange).toHaveBeenCalledWith(MODELS[1].id)
+    await userEvent.click(screen.getByText('Qwen 2.5 72B'))
+    expect(onChange).toHaveBeenCalledWith('qwen/qwen-2.5-72b-instruct:free')
   })
 })
