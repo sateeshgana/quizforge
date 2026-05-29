@@ -20,7 +20,7 @@ describe('ModelSelector', () => {
   it('calls onChange with the model id when a card is clicked', async () => {
     const onChange = vi.fn()
     render(<ModelSelector selected={MODELS[0].id} onChange={onChange} />)
-    await userEvent.click(screen.getByText('Gemma 2 9B'))
-    expect(onChange).toHaveBeenCalledWith('gemma2-9b-it')
+    await userEvent.click(screen.getByText(MODELS[1].name))
+    expect(onChange).toHaveBeenCalledWith(MODELS[1].id)
   })
 })

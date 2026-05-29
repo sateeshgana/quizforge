@@ -1,4 +1,4 @@
-import { buildStudyPrompt, parseStudyResponse, resolveModel } from './generate-study.mts'
+import { buildStudyPrompt, parseStudyResponse, resolveModel, resolveModelConfig } from './generate-study.mts'
 import { DEFAULT_MODEL } from '../../src/models.ts'
 
 describe('buildStudyPrompt', () => {
@@ -49,5 +49,29 @@ describe('resolveModel', () => {
 
   it('falls back to DEFAULT_MODEL when model id is not in MODELS list', () => {
     expect(resolveModel('gpt-4-turbo')).toBe(DEFAULT_MODEL)
+  })
+})
+
+describe('resolveModelConfig', () => {
+  it('returns the full Model object for a valid Groq id', () => {
+    const result = resolveModelConfig('llama-3.3-70b-versatile')
+    expect(result.id).toBe('llama-3.3-70b-versatile')
+    expect(result.provider).toBe('groq')
+  })
+
+  it('returns the full Model object for a valid OpenRouter id', () => {
+    const result = resolveModelConfig('qwen/qwen-2.5-72b-instruct:free')
+    expect(result.id).toBe('qwen/qwen-2.5-72b-instruct:free')
+    expect(result.provider).toBe('openrouter')
+  })
+
+  it('falls back to MODELS[0] when model is undefined', () => {
+    const result = resolveModelConfig(undefined)
+    expect(result.id).toBe(DEFAULT_MODEL)
+  })
+
+  it('falls back to MODELS[0] when model id is unrecognised', () => {
+    const result = resolveModelConfig('gpt-4')
+    expect(result.id).toBe(DEFAULT_MODEL)
   })
 })

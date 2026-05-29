@@ -1,7 +1,9 @@
 import Groq from 'groq-sdk'
 import { randomUUID } from 'crypto'
 import type { StudySet } from '../../src/types'
-import { MODELS, DEFAULT_MODEL } from '../../src/models'
+import { resolveModelConfig } from '../../src/models'
+
+export { resolveModel, resolveModelConfig } from '../../src/models'
 
 export function buildStudyPrompt(text: string): string {
   return `You are a study assistant. Given the following text, generate study materials in JSON format.
@@ -35,11 +37,6 @@ Requirements:
 `
 }
 
-export function resolveModel(model?: string): string {
-  const validIds = new Set(MODELS.map((m) => m.id))
-  return model && validIds.has(model) ? model : DEFAULT_MODEL
-}
-
 export function parseStudyResponse(raw: string): StudySet {
   const json = raw.replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim()
   const parsed = JSON.parse(json)
@@ -66,6 +63,43 @@ export function parseStudyResponse(raw: string): StudySet {
   }
 }
 
+async function generateWithGroq(text: string, modelId: string): Promise<StudySet> {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+  const completion = await groq.chat.completions.create({
+    model: modelId,
+    messages: [{ role: 'user', content: buildStudyPrompt(text) }],
+    max_tokens: 4096,
+    response_format: { type: 'json_object' },
+  })
+  return parseStudyResponse(completion.choices[0]?.message?.content ?? '{}')
+}
+
+async function generateWithOpenRouter(text: string, modelId: string): Promise<StudySet> {
+  const apiKey = process.env.OPENROUTER_API_KEY
+  if (!apiKey) throw new Error('OPENROUTER_API_KEY is not set. Add it to your .env file.')
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://quizforge.netlify.app',
+      'X-Title': 'QuizForge',
+    },
+    body: JSON.stringify({
+      model: modelId,
+      messages: [{ role: 'user', content: buildStudyPrompt(text) }],
+      response_format: { type: 'json_object' },
+      max_tokens: 4096,
+    }),
+  })
+  const data = await response.json() as {
+    choices?: Array<{ message: { content: string } }>
+    error?: { message: string }
+  }
+  if (!response.ok) throw new Error(data.error?.message ?? 'OpenRouter request failed')
+  return parseStudyResponse(data.choices?.[0]?.message?.content ?? '{}')
+}
+
 export default async (req: Request) => {
   if (req.method !== 'POST')
     return new Response('Method Not Allowed', { status: 405 })
@@ -81,16 +115,10 @@ export default async (req: Request) => {
     })
 
   try {
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
-    const completion = await groq.chat.completions.create({
-      model: resolveModel(model),
-      messages: [{ role: 'user', content: buildStudyPrompt(text) }],
-      max_tokens: 4096,
-      response_format: { type: 'json_object' },
-    })
-
-    const raw = completion.choices[0]?.message?.content ?? '{}'
-    const studySet = parseStudyResponse(raw)
+    const modelConfig = resolveModelConfig(model)
+    const studySet = modelConfig.provider === 'openrouter'
+      ? await generateWithOpenRouter(text, modelConfig.id)
+      : await generateWithGroq(text, modelConfig.id)
 
     return new Response(JSON.stringify(studySet), {
       status: 200, headers: { 'Content-Type': 'application/json' },
