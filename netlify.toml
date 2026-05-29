@@ -2,9 +2,13 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  NODE_OPTIONS = "--max-old-space-size=4096"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  excluded_patterns = ["**/*.test.ts", "**/*.test.mts", "**/*.spec.ts"]
 
 [[redirects]]
   from = "/api/*"
