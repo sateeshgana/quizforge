@@ -5,5 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  test: { environment: 'jsdom', globals: true, setupFiles: ['./src/test-setup.ts'], include: ['src/**/*.test.{ts,tsx}', 'netlify/functions/**/*.test.ts'] },
+  optimizeDeps: {
+    include: ['lucide-react'],
+  },
+  test: { environment: 'jsdom', globals: true, setupFiles: ['./src/test-setup.ts'], include: ['src/**/*.test.{ts,tsx}', 'netlify/**/*.test.ts'] },
 })

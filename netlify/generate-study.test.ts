@@ -1,5 +1,5 @@
-import { buildStudyPrompt, parseStudyResponse, resolveModel, resolveModelConfig } from './generate-study.mts'
-import { DEFAULT_MODEL } from '../../src/models.ts'
+import { buildStudyPrompt, parseStudyResponse, resolveModel, resolveModelConfig } from './functions/generate-study.mts'
+import { DEFAULT_MODEL } from '../src/models.ts'
 
 describe('buildStudyPrompt', () => {
   it('includes the source text in the prompt', () => {
