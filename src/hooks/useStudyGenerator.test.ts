@@ -42,12 +42,23 @@ describe('useStudyGenerator', () => {
   })
 
   it('stores error on failure', async () => {
-    mockFetch.mockResolvedValue({ ok: false, json: async () => ({ error: 'API error' }) })
+    mockFetch.mockResolvedValue({ ok: false, status: 400, json: async () => ({ error: 'API error' }) })
     const { result } = renderHook(() => useStudyGenerator())
     await act(async () => {
       await result.current.generate('some text longer than 50 chars here yes this is long enough')
     })
     expect(result.current.error).toBe('API error')
+    expect(result.current.isRetryable).toBe(false)
+  })
+
+  it('sets isRetryable on 5xx errors', async () => {
+    mockFetch.mockResolvedValue({ ok: false, status: 504, json: async () => ({ error: 'Gateway Timeout' }) })
+    const { result } = renderHook(() => useStudyGenerator())
+    await act(async () => {
+      await result.current.generate('some text longer than 50 chars here yes this is long enough')
+    })
+    expect(result.current.error).toBe('Gateway Timeout')
+    expect(result.current.isRetryable).toBe(true)
   })
 
   it('sends the chosen model in the request body', async () => {

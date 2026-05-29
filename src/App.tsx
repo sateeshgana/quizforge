@@ -15,7 +15,7 @@ export default function App() {
   const [text,          setText]          = useState('')
   const [tab,           setTab]           = useState<Tab>('flashcards')
   const [selectedModel, setSelectedModel] = useState(DEFAULT_MODEL)
-  const { studySet, isLoading, error, generate, reset } = useStudyGenerator()
+  const { studySet, isLoading, error, isRetryable, generate, reset } = useStudyGenerator()
   const { progress, record }                      = useCardProgress()
 
   const TABS: { id: Tab; label: string }[] = [
@@ -69,7 +69,14 @@ export default function App() {
         )}
 
         {error && (
-          <div className="rounded-lg bg-red-50 border border-red-300 p-4 text-red-600 text-sm">{error}</div>
+          <div className="rounded-lg bg-red-50 border border-red-300 p-4 text-sm flex flex-col gap-1">
+            <span className="text-red-600">{error}</span>
+            {isRetryable && (
+              <span className="text-red-500">
+                This model may be overloaded or unavailable — try selecting a different model above.
+              </span>
+            )}
+          </div>
         )}
       </main>
     </div>
