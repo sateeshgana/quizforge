@@ -38,7 +38,9 @@ Requirements:
 }
 
 export function parseStudyResponse(raw: string): StudySet {
-  const json = raw.replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim()
+  const json = raw
+    .replace(/<think>[\s\S]*?<\/think>/g, '')
+    .replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim()
   const parsed = JSON.parse(json)
 
   return {
@@ -96,8 +98,11 @@ async function generateWithOpenRouter(text: string, modelId: string): Promise<St
     choices?: Array<{ message: { content: string } }>
     error?: { message: string }
   }
-  if (!response.ok) throw new Error(data.error?.message ?? 'OpenRouter request failed')
-  return parseStudyResponse(data.choices?.[0]?.message?.content ?? '{}')
+  if (data.error) throw new Error(data.error.message ?? 'OpenRouter error')
+  if (!response.ok) throw new Error('OpenRouter request failed')
+  const content = data.choices?.[0]?.message?.content
+  if (!content) throw new Error('Model returned no content')
+  return parseStudyResponse(content)
 }
 
 export default async (req: Request) => {
